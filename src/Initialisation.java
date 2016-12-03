@@ -1,4 +1,3 @@
-
 public class Initialisation {
 
 	public static RdvDialogInfo[] importerRDV() {
@@ -19,15 +18,15 @@ public class Initialisation {
 			/// Rdv
 			//String pDate, String pHeure, String pNom, String pPrenom, String pdateDeNaissance, Traitement pTraitement, boolean pLit, boolean pChimio
 
-			RdvDialogInfo RDV1= new RdvDialogInfo("22/07/16","Matin","Le Glanic", "Sébastien", "M", "01/09/1996", listeTraitements[0], false, true);
-			RdvDialogInfo RDV2= new RdvDialogInfo("22/07/16","Matin","Prioul", "Rémy", "M", "02/09/1996", listeTraitements[1], true, true);
-			RdvDialogInfo RDV3= new RdvDialogInfo("22/07/16","Matin","Gabriela", "Barbosa", "F", "03/09/1996", listeTraitements[2], true, true);
-			RdvDialogInfo RDV4= new RdvDialogInfo("22/07/16","Matin","Gabriela", "Cruz Susin", "F", "04/09/1996", listeTraitements[3], false, true);
-			RdvDialogInfo RDV5= new RdvDialogInfo("22/07/16","Matin","Granger", "Romain", "M", "05/09/1996", listeTraitements[0], false, true);
-			RdvDialogInfo RDV6= new RdvDialogInfo("22/07/16","Aprem","Linard", "Etienne", "M", "06/09/1996", listeTraitements[2], true, true);
-			RdvDialogInfo RDV7= new RdvDialogInfo("22/07/16","Aprem","Cordonnier", "Sylvain", "M", "07/09/1996", listeTraitements[1], true, true);
-			RdvDialogInfo RDV8= new RdvDialogInfo("22/07/16","Aprem","Dupont", "Benoit", "M", "08/09/1996", listeTraitements[0], false, true);
-			RdvDialogInfo RDV9= new RdvDialogInfo("22/07/16","Aprem","Montlouis", "Alexandre", "M", "01/09/1996", listeTraitements[0], false, true);
+			RdvDialogInfo RDV1= new RdvDialogInfo(StringtoDateFormat.StringToDateFormat("22/07/2016"),"Matin","Le Glanic","Sébastien", "M", StringtoDateFormat.StringToDateFormat("1996/09/01"), listeTraitements[0], false, true);
+			RdvDialogInfo RDV2= new RdvDialogInfo(StringtoDateFormat.StringToDateFormat("22/07/2016"),"Matin","Prioul", "Rémy", "M", StringtoDateFormat.StringToDateFormat("1996/09/02"), listeTraitements[1], true, true);
+			RdvDialogInfo RDV3= new RdvDialogInfo(StringtoDateFormat.StringToDateFormat("22/07/2016"),"Matin","Gabriela", "Barbosa", "F", StringtoDateFormat.StringToDateFormat("1996/09/03"), listeTraitements[2], true, true);
+			RdvDialogInfo RDV4= new RdvDialogInfo(StringtoDateFormat.StringToDateFormat("22/07/2016"),"Matin","Gabriela", "Cruz Susin", "F", StringtoDateFormat.StringToDateFormat("1996/09/04"), listeTraitements[3], false, true);
+			RdvDialogInfo RDV5= new RdvDialogInfo(StringtoDateFormat.StringToDateFormat("22/07/2016"),"Matin","Granger", "Romain", "M", StringtoDateFormat.StringToDateFormat("1996/09/05"), listeTraitements[0], false, true);
+			RdvDialogInfo RDV6= new RdvDialogInfo(StringtoDateFormat.StringToDateFormat("22/07/2016"),"Aprem","Linard", "Etienne", "M", StringtoDateFormat.StringToDateFormat("1996/09/06"), listeTraitements[2], true, true);
+			RdvDialogInfo RDV7= new RdvDialogInfo(StringtoDateFormat.StringToDateFormat("22/07/2016"),"Aprem","Cordonnier", "Sylvain", "M", StringtoDateFormat.StringToDateFormat("1996/09/07"), listeTraitements[1], true, true);
+			RdvDialogInfo RDV8= new RdvDialogInfo(StringtoDateFormat.StringToDateFormat("22/07/2016"),"Aprem","Dupont", "Benoit", "M", StringtoDateFormat.StringToDateFormat("1996/09/07"), listeTraitements[0], false, true);
+			RdvDialogInfo RDV9= new RdvDialogInfo(StringtoDateFormat.StringToDateFormat("22/07/2016"),"Aprem","Montlouis", "Alexandre", "M", StringtoDateFormat.StringToDateFormat("1996/09/08"), listeTraitements[0], false, true);
 			
 			RdvDialogInfo[] RDV = {RDV1, RDV2, RDV3, RDV4, RDV5, RDV6, RDV7, RDV8, RDV9};
 			

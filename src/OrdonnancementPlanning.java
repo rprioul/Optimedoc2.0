@@ -16,7 +16,7 @@ public class OrdonnancementPlanning{
 		int nombreRdvAprem=0;
 		
 		for(int k=0 ; k<RDV.length ; k++){
-			if (RDV[k].getHeure().equals("Matin")){
+			if (RDV[k].getDemijournee().equals("Matin")){
 				nombreRdvMatin++;
 			}
 			else{
@@ -29,7 +29,7 @@ public class OrdonnancementPlanning{
 		int m=0;    //compteur
 		int a=0; 	//compteur
 		for(int k=0 ; k<RDV.length ; k++){
-			if (RDV[k].getHeure().equals("Matin")){
+			if (RDV[k].getDemijournee().equals("Matin")){
 				RDVMatin[m]=RDV[k];
 				m++;}
 			else{
@@ -141,7 +141,7 @@ public class OrdonnancementPlanning{
 			System.out.println( RDVAprem[i].getTraitement().getNomTraitement());
 			for (int k=0; k<=RDVAprem[i].getTraitement().getChimio().length-1;k++){
 				System.out.print(RDVAprem[i].getTraitement().getChimio()[k].getNomChimio());
-			}
+			
 			System.out.println(" ");
 		} */
 		
@@ -157,6 +157,152 @@ public class OrdonnancementPlanning{
 		return RDV;	
 		
 
+	}
+	public static TModel creationPlanning(RdvDialogInfo RDV[], Service service) {
+		//création du planning du service : 
+		int c = service.getNbreFauteuils()+service.getNbreLits()+2;
+		int l = 41; // correspond de 8h à 18h00 par pas de 30 min 
+		int ligneMatin = 20; //nombre de lignes correspondant au matin
+		Object [][] donnee = new Object [l][c];
+		String title[] = new String[c];
+		
+		
+		///on crée le titre
+		title[0]="Heure";
+		title[1]="Minute";
+		int k = 1;
+		for (int i=2; i<2+service.getNbreLits(); i++){
+			String indice = ""+k;
+			title[i]="Lit "+ indice;
+			k++;
+		}
+		k = 1;
+		for (int i=2+service.getNbreLits(); i<c; i++){
+			String indice = ""+k;
+			title[i]="Fauteuil "+ indice;
+			k++;
+		}
+		
+		//on crée les horaires
+		int H=8;
+		int minute=0;
+		for( int i=0; i<l; i++){
+			donnee[i][0]=H;
+			donnee[i][1]=minute;
+			minute=minute+15;
+			if (minute==60){
+				H=H+1;
+				minute=0;
+			}
+			
+		}
+		//on remplit le tableau avec les RDVs :
+		int indice = 0;
+		while (indice <RDV.length){
+			RdvDialogInfo rdv = RDV[indice];
+			Double nbCreneau=rdv.getTraitement().getDurée()/15 ;
+			if (rdv.getDemijournee()=="Matin"){
+				int min = 1000 ; //va nous permettre de repérer le première créneau disponible
+				int repèreColonne=1;
+				int ligneDebut=0;
+				if (rdv.getLit()){  		// on repère si le patient a besoin d'un lit
+					for (int j=2; j<2+service.getNbreLits();j++){
+						int ligne=0;
+						while(donnee[ligne][j]!=null && ligne!=ligneMatin-1){
+							ligne++;
+						}
+						if (ligne<min){
+							min=ligne;
+							repèreColonne=j;   //on "garde" en mémoire la colonne avec le créneau disponible le plus tôt
+							ligneDebut = ligne;  // on mémorise aussi la ligne
+						}
+					}
+					if (ligneDebut!=ligneMatin-1){    // si on a trouvé un créneau disponible le matin 
+						while(nbCreneau>0.0 && ligneDebut!=l){
+							donnee[ligneDebut][repèreColonne]=rdv.getNomRdv();  //on remplit les créneaux, attention, on peut déborder sur l'après-midi
+							rdv.setHoraires((int) donnee[ligneDebut][0], (int) donnee[ligneDebut][1]);
+							ligneDebut++;
+							nbCreneau--;
+						}
+					}
+				}
+				else{   // si le patient n'a pas besoin de lit ==> fauteuil
+					for (int j=2+service.getNbreLits(); j<c;j++){
+						int ligne=0;
+						while(donnee[ligne][j]!=null && ligne!=ligneMatin-1){
+							ligne++;
+						}
+						if (ligne<min){
+							min=ligne;
+							repèreColonne=j;   //on "garde" en mémoire la colonne avec le créneau disponible le plus tôt
+							ligneDebut = ligne;  // on mémorise aussi la ligne			
+						}
+					}
+					if (ligneDebut!=ligneMatin-1){    // si on atrouvé un créneau disponible le matin 
+						while(nbCreneau>0.0 && ligneDebut!=l){
+							donnee[ligneDebut][repèreColonne]=rdv.getNomRdv();  //on remplit les créneaux, attention, on peut déborder sur l'après-midi
+							rdv.setHoraires((int) donnee[ligneDebut][0], (int) donnee[ligneDebut][1]);
+							ligneDebut++;
+							nbCreneau--;
+						}	
+					}	
+				}
+			}
+	
+			else {   //si le RDV est l'aprem :
+				int min = 1000 ; //va nous permettre de repérer le première créneau disponible
+				int repèreColonne=1;
+				int ligneDebut=ligneMatin;
+				if (rdv.getLit()){  		// on repère si le patient a besoin d'un lit
+					for (int j=2; j<2+service.getNbreLits();j++){
+						int ligne=ligneMatin;
+						while(donnee[ligne][j]!=null && ligne!=l-1){
+							ligne++;
+						}
+						if (ligne<min){
+							min=ligne;
+							repèreColonne=j;   //on "garde" en mémoire la colonne avec le créneau disponible le plus tôt
+							ligneDebut = ligne;  // on mémorise aussi la ligne
+						}
+					}
+					if (ligneDebut!=l-1){    // si on a trouvé un créneau disponible le matin 
+						while(nbCreneau>0.0 && ligneDebut!=l){
+							donnee[ligneDebut][repèreColonne]=rdv.getNomRdv();  //on remplit les créneaux, attention, on peut déborder sur l'après-midi
+							rdv.setHoraires((int) donnee[ligneDebut][0], (int) donnee[ligneDebut][1]);
+							ligneDebut++;
+							nbCreneau--;
+						}
+					}
+				}
+				else{   // si le patient n'a pas besoin de lit ==> fauteuil
+					for (int j=2+service.getNbreLits(); j<c;j++){
+						int ligne=ligneMatin;
+						while(donnee[ligne][j]!=null && ligne!=ligneMatin-1){
+							ligne++;
+						}
+						if (ligne<min){
+							min=ligne;
+							repèreColonne=j;   //on "garde" en mémoire la colonne avec le créneau disponible le plus tôt
+							ligneDebut = ligne;  // on mémorise aussi la ligne			
+						}
+					}
+					if (ligneDebut!=l-1){    // si on atrouvé un créneau disponible le matin 
+						while(nbCreneau>0.0 && ligneDebut!=l){
+							donnee[ligneDebut][repèreColonne]=rdv.getNomRdv();  //on remplit les créneaux, attention, on peut déborder sur l'après-midi
+							rdv.setHoraires((int) donnee[ligneDebut][0], (int) donnee[ligneDebut][1]);
+							ligneDebut++;
+							nbCreneau--;
+						}	
+					}	
+				}
+			}
+		
+		indice++;   //on passe au rdv suivant 
+		}			
+		TModel Planning = new TModel(donnee,title);
+		return Planning;
+		
+	
 	}
 }
 

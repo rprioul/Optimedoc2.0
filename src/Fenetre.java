@@ -1,19 +1,9 @@
-import java.awt.Graphics;
-import java.awt.GridLayout;
 import java.awt.Color;
-import java.awt.Desktop;
-import java.awt.Font;
-import java.awt.Image;
 import java.awt.Dimension;
-import java.io.File;
-import java.io.IOException;
-
 import java.text.DateFormat;
-import java.util.Date;
-
+import java.text.SimpleDateFormat;
 import org.freixas.jcalendar.*;
 
-import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JToolBar;
@@ -21,7 +11,6 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
-import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -29,21 +18,16 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
-import javax.swing.table.AbstractTableModel;
-
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 /****** FENETRE PRINCIPALE ******/
 
@@ -54,7 +38,10 @@ public class Fenetre extends JFrame implements ActionListener{
 		this.listeRDV = plisteRDV;
 	}
 
-	
+	public void fermerFenetreRDV() {
+		this.dispose();
+	}
+		
 	//Listener sur le menu d�roulant des services
 	  class ServiceState implements ItemListener{
 		  public void itemStateChanged(ItemEvent e) {
@@ -75,10 +62,10 @@ public class Fenetre extends JFrame implements ActionListener{
 			JOptionPane.showMessageDialog(null,  rdvInfo.toString(), "Informations patient", 
 					JOptionPane.INFORMATION_MESSAGE);
 			Object[] donnee = new Object[]
-					{rdvInfo.getDate(),rdvInfo.getHeure(),rdvInfo.getNomRdv(),rdvInfo.getPrenomRdv(),rdvInfo.getSexe(),
+					{rdvInfo.getDate(),rdvInfo.getDemijournee(),rdvInfo.getNomRdv(),rdvInfo.getPrenomRdv(),rdvInfo.getSexe(),
 							rdvInfo.getDateDeNaissance(),rdvInfo.getTraitement().getNomTraitement(),rdvInfo.getLit(),rdvInfo.getChimio()};
-			if(rdvInfo.getNomRdv().isEmpty()  || rdvInfo.getPrenomRdv().isEmpty()|| rdvInfo.getSexe().isEmpty() || rdvInfo.getDateDeNaissance().isEmpty() 
-					  || rdvInfo.getTraitement().getNomTraitement().isEmpty() || rdvInfo.getDate().isEmpty() || rdvInfo.getHeure().isEmpty())
+			if(rdvInfo.getNomRdv().isEmpty()  || rdvInfo.getPrenomRdv().isEmpty()|| rdvInfo.getSexe().isEmpty() || rdvInfo.getDateDeNaissance().toString().isEmpty() 
+					  || rdvInfo.getTraitement().getNomTraitement().isEmpty() || rdvInfo.getDate().toString().isEmpty() || rdvInfo.getDemijournee().isEmpty())
 			  { 
 				}
 			  
@@ -88,7 +75,7 @@ public class Fenetre extends JFrame implements ActionListener{
 				for(int i=0; i<stockageListeRDV.length; i++) {
 					listeRDV[i] = stockageListeRDV[i];
 				}
-				RdvDialogInfo nouveauRDV = new RdvDialogInfo(rdvInfo.getDate(),rdvInfo.getHeure(),rdvInfo.getNomRdv(),rdvInfo.getPrenomRdv(),rdvInfo.getSexe(),
+				RdvDialogInfo nouveauRDV = new RdvDialogInfo(rdvInfo.getDate(),rdvInfo.getDemijournee(),rdvInfo.getNomRdv(),rdvInfo.getPrenomRdv(),rdvInfo.getSexe(),
 						rdvInfo.getDateDeNaissance(),rdvInfo.getTraitement(),rdvInfo.getLit(),rdvInfo.getChimio());
 				listeRDV[stockageListeRDV.length] = nouveauRDV;
 				((TModel) tableau.getModel()).addRow(donnee);
@@ -139,6 +126,7 @@ public class Fenetre extends JFrame implements ActionListener{
 		  animation.add(annulRdv);
 		  annulRdv.addActionListener(new AnnulListener());
 		  animation.addSeparator();
+		  
 		  //Pour quitter l'application
 		  quitter.addActionListener(new ActionListener(){
 			  public void actionPerformed(ActionEvent event){
@@ -148,7 +136,7 @@ public class Fenetre extends JFrame implements ActionListener{
 		  });
 		  animation.add(quitter);
 		  
-		  //Menu Param�tres
+		  //Menu Paramètres
 		  parametres.add(modifparam);
 		  modifparam.addActionListener(new ActionListener(){
 			  public void actionPerformed (ActionEvent event){
@@ -160,6 +148,10 @@ public class Fenetre extends JFrame implements ActionListener{
 		  //Menu A Propos		  
 		 aPropos.add(aProposItem);
 		 aProposItem.addActionListener(new AProposListener());
+		 
+		 //Menu Deconnexion
+		 deconnexion.add(decoSession);
+		 decoSession.addActionListener(new decoSessionListener());
 		 
 		 //Ajout des menus dans la barre des menus
 		 menuBar.add(animation);
@@ -185,7 +177,7 @@ public class Fenetre extends JFrame implements ActionListener{
 		public RdvDialog(JFrame parent, String title, boolean modal){
 		
 		super(parent, title, modal);
-		this.setSize(800,350);
+		this.setSize(1000,550);
 		this.setLocationRelativeTo(null);//La position  
 		this.setResizable(false);//La bo�te ne devra pas �tre redimensonnable
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -198,6 +190,7 @@ public class Fenetre extends JFrame implements ActionListener{
 			this.setVisible(true);
 			return (this.RdvInfo);
 		}
+		
 		
 		//Bo�te de dialogue prise de rdv
 		private void initComponent(){ 
@@ -221,15 +214,32 @@ public class Fenetre extends JFrame implements ActionListener{
 			//Partie Nom - Pr�nom - Sexe - dateDeNaissance 
 			
 			JPanel panNPS = new JPanel();			
-			panNPS.setPreferredSize(new Dimension (180,150));
+			panNPS.setPreferredSize(new Dimension (180,300));
 			JTextField nom = new JTextField();
 			nom.setPreferredSize(new Dimension(100,25));
 			JLabel nomLabel = new JLabel("Nom :");
 			JTextField prenom = new JTextField();
 			prenom.setPreferredSize(new Dimension(100,25));
-			JLabel dateDeNaissanceLabel = new JLabel("Né(e) le :");
-			JTextField dateDeNaissance = new JTextField();
-			dateDeNaissance.setPreferredSize(new Dimension(100,25));
+			JLabel dateDeNaissanceLabel = new JLabel("Né(e) le :                                 ");
+			JLabel dateDeNaissanceJourLabel = new JLabel("     Jour       ");
+			JLabel dateDeNaissanceMoisLabel = new JLabel("     Mois       ");
+			JLabel dateDeNaissanceAnneeLabel = new JLabel("    Annee");
+			//JTextField dateDeNaissance = new JTextField();
+			//dateDeNaissance.setPreferredSize(new Dimension(100,25));
+			
+			JComboBox<String> dateDeNaissanceJour = new JComboBox<String>();
+			for (int k=1 ; k<=31 ; k++){
+				dateDeNaissanceJour.addItem("" + k);
+			}
+			JComboBox<String> dateDeNaissanceMois = new JComboBox<String>();
+			for (int k=0 ; k<=11; k++){
+				dateDeNaissanceMois.addItem("" + k);
+			}
+			JComboBox<String> dateDeNaissanceAnnee = new JComboBox<String>();
+			for (int k=1900 ; k<=2500; k++){
+				dateDeNaissanceAnnee.addItem("" + k);
+			}
+			
 			JLabel prenomLabel = new JLabel("Prénom :");
 			JComboBox<String> sexe = new JComboBox<String>();
 		    sexe.addItem("M");
@@ -242,14 +252,26 @@ public class Fenetre extends JFrame implements ActionListener{
 			panNPS.add(prenomLabel);
 			panNPS.add(prenom);
 			panNPS.add(dateDeNaissanceLabel);
-			panNPS.add(dateDeNaissance);
+		//	panNPS.add(dateDeNaissance);
+			panNPS.add(dateDeNaissanceJourLabel);
+			panNPS.add(dateDeNaissanceJour);
+			panNPS.add(dateDeNaissanceMoisLabel);
+			panNPS.add(dateDeNaissanceMois);
+			panNPS.add(dateDeNaissanceAnneeLabel);
+			panNPS.add(dateDeNaissanceAnnee);
 			panNPS.add(sexeLabel);
 			panNPS.add(sexe);
+			
+
+			
+			String StringDateNaissance = dateDeNaissanceJour.getSelectedItem()+"/"+dateDeNaissanceMois.getSelectedItem()+"/"+dateDeNaissanceAnnee.getSelectedItem();
+			DateFormat dateNaissance = new SimpleDateFormat(StringDateNaissance);
+
 			
 			//PARTIE Traitement-Prise en charge
 			
 			JPanel panTraitement = new JPanel();
-			panTraitement.setPreferredSize(new Dimension (220,150));
+			panTraitement.setPreferredSize(new Dimension (220,300));
 			panTraitement.setBorder(BorderFactory.createTitledBorder("Informations traitement"));
 			
 			String[] traitements = RchDonnees.trouverTraitements();
@@ -270,7 +292,7 @@ public class Fenetre extends JFrame implements ActionListener{
 		    //PARTIE Rendez-vous
 		    
 		    JPanel panRdV = new JPanel();
-		    panRdV.setPreferredSize(new Dimension (350,300));
+		    panRdV.setPreferredSize(new Dimension (550,400));
 		    panRdV.setBorder(BorderFactory.createTitledBorder("Date du rdv"));
 		    
 		    panRdV.add(dateField);
@@ -298,15 +320,16 @@ public class Fenetre extends JFrame implements ActionListener{
 			public void dateChanged(DateEvent evt)
 			{								
 				DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, calendar.getLocale());
-				dateField.setText(df.format(calendar.getDate()));							
-			}
+				dateField.setText(df.format(calendar.getDate()));
+			}	
 		});
 		
 		//Listener pour le bouton ok
 		ok.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0){
-				RdvInfo = new RdvDialogInfo(dateField.getText(), (String)heure.getSelectedItem(), nom.getText(), prenom.getText(), 
-						(String)sexe.getSelectedItem(), dateDeNaissance.getText(), new Traitement((String)boxtraitements.getSelectedItem()), 
+				DateFormat dateDuRDV = new SimpleDateFormat(dateField.getText());
+				RdvInfo = new RdvDialogInfo(dateDuRDV, (String)heure.getSelectedItem(), nom.getText(), prenom.getText(), 
+						(String)sexe.getSelectedItem(), dateNaissance, new Traitement((String)boxtraitements.getSelectedItem()), 
 						(resLit.getText().equals("Oui")),(resChimio.getText().equals("Oui")));
 				setVisible(false);
 			}
@@ -348,65 +371,40 @@ public class Fenetre extends JFrame implements ActionListener{
 	  
 	  class lancerListener implements ActionListener {
 			public void actionPerformed(ActionEvent arg0) {
-				Color vertOpti = new Color(149,228,149);
-				
-				System.out.println("Avant : ");
-				for(int i=0; i<listeRDV.length; i++) {
-					System.out.println(tableau.getValueAt(i,3));
-				}
-				listeRDV = OrdonnancementPlanning.lancerOptimisation(listeRDV);
-				
-				tableau.setModel(tableauRDV.createTableau(listeRDV));
-				tableau.setBackground(vertOpti);
-				System.out.println("Après : ");
-				for(int i=0; i<listeRDV.length; i++) {
-					System.out.println(tableau.getValueAt(i,3));
-				}
-				((TModel)tableau.getModel()).maj();
-				
-				//tableau.invalidate();
+				listeRDV = OrdonnancementPlanning.lancerOptimisation(listeRDV);		
+				//tableau.setModel(tableauRDV.createTableau(listeRDV));
+				tableau2.setModel(OrdonnancementPlanning.creationPlanning(listeRDV, pharmacie));;
+				//tableau.setBackground(vertOpti);
+				//((TModel)tableau.getModel()).maj();
+				((TModel)tableau2.getModel()).maj();
+
 			}
 		};	 
 		
 		 // Listener Bouton " Nouveau RDV"
 		
 	  class RdvListener implements ActionListener{ 
-		  public void actionPerformed(ActionEvent e ) {RdvDialog rdvd = new RdvDialog(null,"Nouveau rendez-vous",true);
+		  public void actionPerformed(ActionEvent e ) {
+			RdvDialog rdvd = new RdvDialog(null,"Nouveau rendez-vous",true);
 			RdvDialogInfo rdvInfo = rdvd.showRdvDialog();
 			new JOptionPane();
 			JOptionPane.showMessageDialog(null,  rdvInfo.toString(), "Informations patient", 
 					JOptionPane.INFORMATION_MESSAGE);
-			Object[] donnee = new Object[]
-					{rdvInfo.getDate(),rdvInfo.getHeure(),rdvInfo.getNomRdv(),rdvInfo.getPrenomRdv(),rdvInfo.getSexe(),
-							rdvInfo.getDateDeNaissance(),rdvInfo.getTraitement().getNomTraitement(),rdvInfo.getLit(),rdvInfo.getChimio()};
-			
-			if(rdvInfo.getNomRdv().isEmpty()  || rdvInfo.getPrenomRdv().isEmpty()|| rdvInfo.getSexe().isEmpty() || rdvInfo.getDateDeNaissance().isEmpty() 
-					  || rdvInfo.getTraitement().getNomTraitement().isEmpty() || rdvInfo.getDate().isEmpty() || rdvInfo.getHeure().isEmpty())
+			if(rdvInfo.getNomRdv().isEmpty()  || rdvInfo.getPrenomRdv().isEmpty()|| rdvInfo.getSexe().isEmpty() || rdvInfo.getDateDeNaissance().toString().isEmpty() 
+					  || rdvInfo.getTraitement().getNomTraitement().isEmpty() || rdvInfo.getDate().toString().isEmpty() || rdvInfo.getDemijournee().isEmpty())
 			  { 
 				}
 			  
-			else {;
+			else {
 				RdvDialogInfo[] stockageListeRDV = new RdvDialogInfo[listeRDV.length+1];
 				for(int i=0; i<listeRDV.length; i++) {
 					stockageListeRDV[i] = listeRDV[i];
 					// System.out.println(listeRDV[i].getNomRdv());
 				}
-				RdvDialogInfo nouveauRDV = new RdvDialogInfo(rdvInfo.getDate(),rdvInfo.getHeure(),rdvInfo.getNomRdv(),rdvInfo.getPrenomRdv(),rdvInfo.getSexe(),
+				RdvDialogInfo nouveauRDV = new RdvDialogInfo(rdvInfo.getDate(),rdvInfo.getDemijournee(),rdvInfo.getNomRdv(),rdvInfo.getPrenomRdv(),rdvInfo.getSexe(),
 						rdvInfo.getDateDeNaissance(),rdvInfo.getTraitement(),rdvInfo.getLit(),rdvInfo.getChimio());
 				stockageListeRDV[stockageListeRDV.length-1] = nouveauRDV;
 				setlisteRDV(stockageListeRDV);
-				int c=0;
-				for(int i=0; i<listeRDV.length; i++) {
-					System.out.println(listeRDV[i].getNomRdv()+"1 \n");
-					c++;
-					System.out.println(c);
-				}
-				((TModel) tableau.getModel()).addRow(donnee);
-				tableau.setRowSelectionInterval(tableau.getRowCount()-1, tableau.getRowCount()-1);
-				tableau.setSelectionBackground(Color.orange);
-				/*for(int i=0; i<tableau.getModel().getRowCount(); i++) {
-					System.out.println(tableau.getValueAt(i,3));
-				} */
 				}
 		  }
 	  }
@@ -420,10 +418,22 @@ public class Fenetre extends JFrame implements ActionListener{
 			
 		  }
 	  }
+	  
+	  class decoSessionListener implements ActionListener{
+		  public void actionPerformed(ActionEvent e) {
+			  new Log();
+			  fermerFenetreRDV();
+		  }
+	  }
 	
 	  //Liste des servives
-	String[] services = {"Pharmacie", "Oncologie", "Pneumologie","Autres"};
-	
+	public Service pharmacie = new Service("Pharmacie",2,2);
+	public Service oncologie = new Service("Oncologie",1,3);
+	public Service pneumologie = new Service("Pneumologie",2,1);
+	public Service autre = new Service("Autre",2,2);
+	Service[] service = {pharmacie, oncologie, pneumologie, autre};
+	String[] services = {pharmacie.getNomService(), oncologie.getNomService(), pneumologie.getNomService(), autre.getNomService()};
+
 	//Cr�ation liste d�roulante des services
 	private JComboBox<String> boxservices = new JComboBox<String>(services);
 	private JLabel label = new JLabel("Selectionnez votre service");
@@ -432,14 +442,9 @@ public class Fenetre extends JFrame implements ActionListener{
 	private JButton impression = new JButton("Impression");
 	private JButton ajoutLigne = new JButton("Ajouter une ligne");
 	private JTable tableau ;
+	private JTable tableau2 ; 
 	private JMenuBar menuBar = new JMenuBar();
 	
-	public void setTableauRDV(){
-		this.tableau = new JTable(tableauRDV.createTableau(listeRDV));
-		((TModel) tableau.getModel()).maj();
-	    this.getContentPane().add(new JScrollPane(tableau), BorderLayout.CENTER);
-		
-	}
 	
 	
 	
@@ -454,20 +459,21 @@ public class Fenetre extends JFrame implements ActionListener{
 	//Sous cat�gories du menu
 	private JMenuItem lancer = new JMenuItem("Lancer l'optimisation"),
 			quitter = new JMenuItem("Quitter"),
-			aProposItem = new JMenuItem("?"),
+			aProposItem = new JMenuItem("A propos ?"),
 			modifparam = new JMenuItem("Modifier"),
 			newRdv = new JMenuItem("Nouveau rendez-vous"),
 			modifRdv = new JMenuItem("Modification d'un rendez-vous"),
-			annulRdv = new JMenuItem("Annulation d'un rendez-vous");
+			annulRdv = new JMenuItem("Annulation d'un rendez-vous"),
+			decoSession = new JMenuItem("Quitter la session");
 	
 	private JToolBar toolBar = new JToolBar();
 	
-	private JButton play = new JButton(new ImageIcon("play.jpg")),
+	private JButton play = new JButton(new ImageIcon("play.png")),
 			erase = new JButton(new ImageIcon("cancel.png")),
 			deco = new JButton(new ImageIcon("deconnexion.jpeg")),
 			print = new JButton(new ImageIcon("imprimer.jpeg")),
 			edit = new JButton(new ImageIcon("edit.png")),
-			add = new JButton(new ImageIcon("+.jpeg")),
+			add = new JButton(new ImageIcon("+.jpg")),
 			parameter = new JButton(new ImageIcon("parameter.png")),
 			quitter1 = new JButton(new ImageIcon("quitter.jpeg"));
 	
@@ -488,7 +494,7 @@ public class Fenetre extends JFrame implements ActionListener{
 				annulRdv.doClick();
 			}
 			else if (e.getSource()== deco) { 
-				//Lancement deconnexion
+				deconnexion.doClick();
 			}
 			else if (e.getSource()== edit) { 
 				modifRdv.doClick();
@@ -547,7 +553,7 @@ public class Fenetre extends JFrame implements ActionListener{
 			
 	public Fenetre(){
 		this.setTitle("OptiMedoc");
-		this.setSize(800, 500);
+		this.setSize(1000, 600);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLayout(new BorderLayout());	
@@ -571,9 +577,10 @@ public class Fenetre extends JFrame implements ActionListener{
 	    
 	    //Les titres des colonnes
 	    
-	    this.tableau = new JTable(tableauRDV.createTableau(listeRDV));
-	    this.getContentPane().add(new JScrollPane(tableau), BorderLayout.CENTER);
-	    
+	    //this.tableau = new JTable(tableauRDV.createTableau(listeRDV));
+	    //this.getContentPane().add(new JScrollPane(tableau), BorderLayout.CENTER);
+	    this.tableau2 = new JTable(OrdonnancementPlanning.creationPlanning(listeRDV, pharmacie));
+	    this.getContentPane().add(new JScrollPane(tableau2), BorderLayout.CENTER);
 	         
 	    /******************EN BAS**************************/
 	    

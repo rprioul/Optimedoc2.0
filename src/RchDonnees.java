@@ -4,6 +4,36 @@ public class RchDonnees {
 	
 	//Retourne la liste des traitements enregistrés
 	
+	public static boolean verificationLogin(String uName, String pWord) {
+		Object tblConnexions[][];		
+		tblConnexions = tblExcelConnexion.importTblConnexions();
+		
+		System.out.print(pWord);
+		System.out.print(uName);
+		boolean connexionOK = false;
+		for(int i=0; i<tblConnexions.length; i++) {
+			System.out.print(tblConnexions[i][1]);
+			System.out.print(tblConnexions[i][0]);
+			if(tblConnexions[i][0].equals(uName) && tblConnexions[i][1].equals(pWord)) {
+				connexionOK = true;
+				break;
+			}
+		}
+		return connexionOK;
+	}
+	
+	public static String[] trouverUtilisateurs() {
+		Object tblConnexions[][];		
+		tblConnexions = tblExcelConnexion.importTblConnexions();
+		String[] listeUtilisateurs = new String[tblConnexions.length];
+		
+		for(int i=0; i<tblConnexions.length; i++) {
+			listeUtilisateurs[i] = (String) tblConnexions[i][0];
+		}
+		return listeUtilisateurs;
+	}
+	
+	
 	public static String[] trouverTraitements() {
 		Object tblProtocoles[][];		
 		tblProtocoles = tblExcelProtocoles.importTblProtocoles();

@@ -6,7 +6,7 @@ public class tableauRDV {
 		Object[][] data = new Object[RDV.length][9];
 		for(int i=0;i<RDV.length;i++) {
 			data[i][0] = RDV[i].getDate();
-			data[i][1] = RDV[i].getHeure();
+			data[i][1] = RDV[i].getDemijournee();
 			data[i][2] = RDV[i].getNomRdv();
 			data[i][3] = RDV[i].getPrenomRdv();
 			data[i][4] = RDV[i].getSexe();
