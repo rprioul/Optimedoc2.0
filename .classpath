@@ -7,5 +7,6 @@
 	<classpathentry kind="lib" path="C:/Users/remy/Downloads/poi-bin-3.14/poi-3.14/poi-ooxml-schemas-3.14-20160307.jar"/>
 	<classpathentry kind="lib" path="C:/Users/remy/Downloads/poi-bin-3.14/poi-3.14/ooxml-lib/xmlbeans-2.6.0.jar"/>
 	<classpathentry kind="lib" path="C:/Users/remy/Downloads/jcalendar.jar"/>
+	<classpathentry kind="lib" path="C:/Users/remy/Downloads/ojdbc7.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

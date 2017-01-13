@@ -1,28 +1,35 @@
+package com.sdz.model;
 import java.text.DateFormat;
 import java.util.Date;
 
 public class RdvDialogInfo{
-	  private String nom, prenom, sexe ,demijournee;
+	  private String nom, prenom, sexe ,demijournee, couleur, localisationRDV;
+	  private Service service;
 	  private DateFormat dateDeNaissance, date;
-	  private boolean lit,chimio;
+	  private boolean lit,chimio,valide;
 	  private int[] horaires = new int[2];
+	  private int tempsAttente, ID;  //temps en minute 
 	  private Traitement traitement;
 	  private int nombreTotalRdv=0;
 	  
-	  public RdvDialogInfo(){
+	  public RdvDialogInfo() {
 	  }
 	  
-	  public RdvDialogInfo(DateFormat date, String demijournee, String nom, String prenom, String sexe, DateFormat dateDeNaissance, Traitement traitement,
-			  boolean lit, boolean chimio){
+	  public RdvDialogInfo(int ID, Service pService, DateFormat date, String demijournee, String nom, String prenom, String sexe, DateFormat dateDeNaissance, Traitement traitement, 
+			  boolean lit, boolean chimio, String couleur, boolean valide){
+		  this.ID = ID;
 		  this.prenom = prenom;
 		  this.nom = nom;
 		  this.sexe = sexe;
 		  this.dateDeNaissance = dateDeNaissance;
 		  this.traitement = traitement;
+		  this.service=pService;
 		  this.date=date;
 		  this.demijournee=demijournee;
 		  this.lit=lit;
 		  this.chimio=chimio;
+		  this.couleur=couleur;
+		  this.setValide(valide);
 		  
 		  // System.out.println("Infos lit : "+this.lit +"\n");
 	  }
@@ -33,7 +40,7 @@ public class RdvDialogInfo{
 		  System.out.println("NOM : " + this.nom);
 			 
 		  if(this.nom.isEmpty()  || this.prenom.isEmpty()|| this.sexe.isEmpty() || this.dateDeNaissance.toString().isEmpty() 
-				  || this.traitement.getNomTraitement().isEmpty() || this.date.toString().isEmpty() || this.demijournee.isEmpty())
+				  || this.service.getNomService().isEmpty() || this.traitement.getNomTraitement().isEmpty() || this.date.toString().isEmpty() || this.demijournee.isEmpty())
 		  { str = "Toutes les informations ne sont pas remplies !"; }
 		  
 		  else{
@@ -42,12 +49,12 @@ public class RdvDialogInfo{
 			  str += "Nom : " + this.nom + "\n";
 			  str += "Prenom : " + this.prenom + "\n";
 			  str += "Sexe : " + this.sexe + "\n";
-			  str += "NÃ©(e) le : " + this.dateDeNaissance.format(dateformat) + "\n";
+			  str += "Né(e) le : " + this.dateDeNaissance.format(dateformat) + "\n";
 			  str += "Traitement : " + this.traitement.getNomTraitement() + "\n";
 			  str += "Date : " + this.date.format(dateformat) + "\n";
 			  str += "Heure : " + this.demijournee + "\n";
 			  str += "Lit : " + this.lit + "\n";
-			  str += "Traitement chimiothÃ©rapeutique : " + this.chimio + "\n";
+			  str += "Traitement chimiothérapeutique : " + this.chimio + "\n";
 			  }
 		  
 		  return str;
@@ -67,6 +74,10 @@ public class RdvDialogInfo{
 	
 	public String getNomRdv(){
 		return nom;
+	}
+	
+	public Service getService(){
+		return service;
 	}
 	
 	public DateFormat getDateDeNaissance(){
@@ -98,4 +109,45 @@ public class RdvDialogInfo{
 		this.horaires[0]=pHeure;
 		this.horaires[1]=pMinute;
 	}
+	
+	public int getTempsAttente(){
+		return tempsAttente;
+	}
+	
+	public void setTempsAttente(int pMinute){
+		this.tempsAttente=pMinute;
+	}
+	
+	public int getID() {
+		return ID;
+	}
+
+	public String getCouleur() {
+		// TODO Auto-generated method stub
+		return couleur;
+	}
+	
+	public void setCouleur(String couleur) {
+		// TODO Auto-generated method stub
+		this.couleur = couleur;
+	}
+	
+	public String getLocalisationRDV() {
+		return localisationRDV;
+	}
+	
+	public void setLocalisationRDV(String localisationRDV) {
+		// TODO Auto-generated method stub
+		this.localisationRDV = localisationRDV;
+	}
+
+	public boolean isValide() {
+		return valide;
+	}
+
+	public void setValide(boolean valide) {
+		this.valide = valide;
+	}
 }
+
+

@@ -1,3 +1,5 @@
+package com.sdz.model;
+
 import javax.swing.table.AbstractTableModel;
 
 public class TModel extends AbstractTableModel{
@@ -10,7 +12,7 @@ public class TModel extends AbstractTableModel{
 		this.title = title;
 	}
 	
-	 //Retourne le titre de la colonne ï¿½ l'indice spï¿½cifiï¿½
+	 //Retourne le titre de la colonne à l'indice spécifié
 	   public String getColumnName(int col) {
 	     return this.title[col];
 	   }
@@ -25,21 +27,21 @@ public class TModel extends AbstractTableModel{
 	      return this.data.length;
 	   }
 	    
-	   //Retourne la valeur ï¿½ l'emplacement spï¿½cifiï¿½
+	   //Retourne la valeur à l'emplacement spécifié
 	   public Object getValueAt(int row, int col) {
 	      return this.data[row][col];
 	   }
 	   
-	 //Dï¿½finit la valeur ï¿½ l'emplacement spï¿½cifiï¿½
+	 //Définit la valeur à l'emplacement spécifié
 	   public void setValueAt(Object value, int row, int col) {
 	     	         this.data[row][col] = value;
 	   }
 	          
-	  //Retourne la classe de la donnï¿½e de la colonne
+	  //Retourne la classe de la donnée de la colonne
 	   public Class getColumnClass(int col){
-	      //On retourne le type de la cellule ï¿½ la colonne demandï¿½e
-	      //On se moque de la ligne puisque les donnï¿½es sont les mï¿½mes
-	      //On choisit donc la premiï¿½re ligne
+	      //On retourne le type de la cellule à la colonne demandée
+	      //On se moque de la ligne puisque les données sont les mêmes
+	      //On choisit donc la première ligne
 	      return this.data[0][col].getClass();
 	   }
 	   
@@ -56,12 +58,8 @@ public class TModel extends AbstractTableModel{
 	          
 	      this.data[indice] = data;
 	      temp = null;
-	      //Cette mï¿½thode permet d'avertir le tableau que les donnï¿½es
-	      //ont ï¿½tï¿½ modifiï¿½es, ce qui permet une mise ï¿½ jour complï¿½te du tableau
+	      //Cette méthode permet d'avertir le tableau que les données
+	      //ont été modifiées, ce qui permet une mise à jour complète du tableau
 	      this.fireTableDataChanged();
-	   }
-	   
-	   public void maj(){
-		   this.fireTableDataChanged(); 
 	   }
 }
