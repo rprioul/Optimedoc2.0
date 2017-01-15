@@ -21,6 +21,10 @@ public class OptiControler extends AbstractControler {
   
       if(this.action.equals("Modif"))
       {
+    	  //Nous n'avons pas implémenté de modification à proprement parler. Pour gagner du temps nous avons assimilé une modification
+    	  //à une suppression du rendz-vous à modifier suivi d'un ajout du rendez-vous avec les informations modifiées. Bien sûr,
+    	  //dans le cas où on travaille dans une base de données, il est évidemment nécessaire de mettre en place une fonction de
+    	  //modification à relier à une commande SQL UPDATE
     	  JOptionPane jop = new JOptionPane();
 		  jop.showMessageDialog(null,"L'option \"Modification de rdv\" n'est pas encore disponible","Attention",JOptionPane.WARNING_MESSAGE);
 		  System.out.println("Controleur : Modification non disponible");
@@ -52,7 +56,6 @@ public class OptiControler extends AbstractControler {
     	  
       }
       else if (this.action.equals("ChangeDate")){
-    	  //System.out.println("Date reçue par le controler" + this.date + this.styl);
     	  this.calc.chgDate(this.styl, this.date);
       }
       else if (this.action.equals("Opti")) {
@@ -60,7 +63,6 @@ public class OptiControler extends AbstractControler {
       }
       
       else if (this.action.equals("ChangeMobilier")){
-    	  System.out.println("Lit reçu par le controler : " + this.lit + "fauteuils : " +this.fauteuil);
     	  this.calc.chgtMobilier(lit, fauteuil);
       }
       
@@ -68,10 +70,6 @@ public class OptiControler extends AbstractControler {
       else ; //Sinon, on passe l'opérateur au modèle
        // this.calc.setOperateur(this.action);
     }
-
-    //Si le nombre est conforme
-   // if(this.nbre.matches("^[0-9.]+$"))
-      //this.calc.setNombre(this.nbre);
 
     this.action = "";
     this.nbre = "";

@@ -37,21 +37,21 @@ public class RchDonnees {
 		return tmodel;
 	}
 	
-	// Convertir les oui/non en true/false
+	// Convertir les oui/non en true/false (utilisé pour l'afichage ).
 	public static Boolean ConvOuiTrue(Object object) {
 			if(object.toString().equals("Oui"))
 				return true;
 			else return false;
 	}
 	
-	// Convertir les oui/non en true/false
+	// Convertir les oui/non en true/false (utilisé pour l'afichage ).
 	public static String ConvTrueOui(Boolean bool) {
 			if(bool.equals(true))
 				return "Oui";
 			else return "Non";
 	}
 	
-	//Recherche du plus grand ID dans la liste des rendez-vous afin d'incrÃ©menter pour le nouveau RDV
+	//Recherche du plus grand ID dans la liste des rendez-vous afin d'incrémenter pour le nouveau RDV (pas utile dans une BDD).
 	public static int newIDRDV() {
 		Object tblRDV[][];
 		tblRDV = tblExcelRDV.importTblRDV();
@@ -63,9 +63,7 @@ public class RchDonnees {
 		}
 		return max+1;
 	}
-	
-	
-	// SÃ©lection des rendez-vous d'une journÃ©e et d'un service pour pourvoir afficher le tableau des RDV
+	// Sélection des rendez-vous d'une journée et d'un service pour pourvoir afficher le tableau des RDV
 	public static RdvDialogInfo[] selectionListeRDV(Service serviceActuel, String date) {
 		RdvDialogInfo[] tblRDV = importationListeRDV();
 		DateFormat dateTableau = StringtoDateFormat.StringToDateFormat(date);
@@ -81,7 +79,7 @@ public class RchDonnees {
 		return rdvJourService;
 	}
 	
-	// Initialisation de la liste des RDV enregistrÃ©s dans le fichier excel RDV.xlsx
+	// Initialisation de la liste des RDV enregistrés dans le fichier excel RDV.xlsx
 	public static RdvDialogInfo[] importationListeRDV() {
 		Object tblRDV[][];
 		tblRDV = tblExcelRDV.importTblRDV();
@@ -100,6 +98,7 @@ public class RchDonnees {
 		chargement.setSize(450,40);
 		chargement.setTitle("Chargement des données, veuillez patienter...");
 		chargement.setLocation(10, 10);
+		chargement.setResizable(false);
 		chargement.setLocationRelativeTo(null); 
 		chargement.setIconImage(new ImageIcon("logo.png").getImage());
 		chargement.setVisible(true);
@@ -131,7 +130,7 @@ public class RchDonnees {
 		return rdvEnregistres;
 	}
 	
-	//Initialisation de la liste des navettes prÃ©sentes dans le fichier excel Navettes.xlsx
+	//Initialisation de la liste des navettes présentes dans le fichier excel Navettes.xlsx
 	public static Navette[] creationListeNavettes() {
 		Object tblNavettes[][];
 		tblNavettes = tblExcelNavettes.importTblNavettes();
@@ -144,7 +143,7 @@ public class RchDonnees {
 		return listeNavettes;
 	}
 	
-	//VÃ©rifie que la combinaison user/password est bien dans le fichier excel pour autoriser la
+	//Vérifie que la combinaison user/password est bien dans le fichier excel pour autoriser la
 	//connexion
 	public static boolean verificationLogin(String uName, String pWord) {
 		Object tblConnexions[][];		
@@ -172,7 +171,7 @@ public class RchDonnees {
 		return listeUtilisateurs;
 	}
 	
-	//Retourne le vecteur des traitements enregistrÃ©s
+	//Retourne le vecteur des traitements enregistrés
 	public static String[] trouverTraitements() {
 		Object tblProtocoles[][];		
 		tblProtocoles = tblExcelProtocoles.importTblProtocoles();
@@ -184,7 +183,7 @@ public class RchDonnees {
 		return listeTraitements;
 	}
 	
-	// Permet de trouver la durÃ©e de vie d'une chimio avec pour argument le nom de la chimio
+	// Permet de trouver la durée de vie d'une chimio avec pour argument le nom de la chimio
 	public static Double trouverDuréeVie(Double composant) {
 		Object tblComposants[][];
 		Double duréeVie = 0.0;
@@ -195,11 +194,11 @@ public class RchDonnees {
 				duréeVie = (Double) (tblComposants[i][2]);
 			}
 		}
-		/* System.out.println(durÃ©eVie); */
+		/* System.out.println(duréeVie); */
 		return duréeVie;
 	}
 	
-	// Permet de trouver la durÃ©e de vie d'une chimio avec pour argument le nom de la chimio
+	// Permet de trouver la durée de vie d'une chimio avec pour argument le nom de la chimio
 		public static String trouverNomChimio(Double composant) {
 			Object tblComposants[][];
 			String nomChimio = null;
@@ -210,11 +209,11 @@ public class RchDonnees {
 					nomChimio = tblComposants[i][1].toString();
 				}
 			}
-			/* System.out.println(durÃ©eVie); */
+			/* System.out.println(duréeVie); */
 			return nomChimio;
 		}
 		
-	// Permet de trouver la durÃ©e d'un traitement avec pour argument le nom du traitement
+	// Permet de trouver la durée d'un traitement avec pour argument le nom du traitement
 	public static Double trouverDuréeTrait(String protocole) {
 		Object tblProtocoles[][];
 		Double DuréeTrait = 0.0;
@@ -225,17 +224,17 @@ public class RchDonnees {
 				DuréeTrait = (Double) (tblProtocoles[i][8]);
 			}
 		}
-		/* System.out.println(DurÃ©eTrait); */
+		/* System.out.println(DuréeTrait); */
 		return DuréeTrait;
 	}
 	
-	// Permet de trouver les diffÃ©rents composants/chimios d'un traitement avec pour argument le nom du traitement
+	// Permet de trouver les différents composants/chimios d'un traitement avec pour argument le nom du traitement
 	public static Double[] trouverComposants(String protocole) {
 		Object tblProtocoles[][];
 		int ligneTraitement = 0;
 		int nbChimios = 0;
 		
-		//On dÃ©termine la ligne oÃ¹ se situe le traitement
+		//On détermine la ligne où se situe le traitement
 		tblProtocoles = tblExcelProtocoles.importTblProtocoles();
 		for(int i=0; i<tblProtocoles.length; i++) {
 			if(Objects.equals(tblProtocoles[i][1], protocole)) {
@@ -244,14 +243,14 @@ public class RchDonnees {
 			}
 		}
 		
-		// On dÃ©termine le nombre de chimios qui composent le traitement
+		// On détermine le nombre de chimios qui composent le traitement
 		for(int j=2; j<7; j++) {
 			if(!((Double)tblProtocoles[ligneTraitement][j]).equals(0.0)) {
 				nbChimios++;
 			}
 		}
 		
-		//On remplit un vecteur qui va contenir l'identifiant des diffÃ©rentes chimios
+		//On remplit un vecteur qui va contenir l'identifiant des différentes chimios
 		Double[] composants = new Double[nbChimios];
 		for(int j=2; j<7; j++) {
 			if(!((Double)tblProtocoles[ligneTraitement][j]).equals(0.0)) {
@@ -263,12 +262,12 @@ public class RchDonnees {
 		return composants;
 	}
 
-	// MÃ©thode qui va retourner le nombre de fauteuils dans le service (utlisÃ©e dans le constructeur Service
+	// Méthode qui va retourner le nombre de fauteuils dans le service (utlisée dans le constructeur Service
 	public static int trouverNbFauteuils(String service) {
 		Object tblServices[][];
 		int nbFauteuils = 0;
 		
-		//On dÃ©termine la ligne oÃ¹ se situe le service
+		//On détermine la ligne où se situe le service
 		tblServices = tblExcelConnexion.importTblConnexions();
 		for(int i=0; i<tblServices.length; i++) {
 			if(Objects.equals(tblServices[i][0], service)) {
@@ -279,12 +278,12 @@ public class RchDonnees {
 		return nbFauteuils;
 	}
 	
-	// MÃ©thode qui va retourner le nombre de lits dans le service (utlisÃ©e dans le constructeur Service
+	// Méthode qui va retourner le nombre de lits dans le service (utlisée dans le constructeur Service
 	public static int trouverNbLits(String service) {
 		Object tblServices[][];
 		int nbLits = 0;
 		
-		//On dÃ©termine la ligne oÃ¹ se situe le service
+		//On détermine la ligne où se situe le service
 		tblServices = tblExcelConnexion.importTblConnexions();
 		for(int i=0; i<tblServices.length; i++) {
 			if(Objects.equals(tblServices[i][0], service)) {

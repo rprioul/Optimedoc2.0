@@ -10,6 +10,8 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class tblExcelRDV {
+	// Cette classe permet d'importer les services et les informations relatives 
+	// qui sont stockés dans le fichier Excel dans un Object[][]
     
     public static Object[][] importTblRDV() {
         String excelFilePath = "RDV.xlsx";
@@ -17,7 +19,6 @@ public class tblExcelRDV {
 		try {
 			inputStream = new FileInputStream(new File(excelFilePath));
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
          
@@ -25,13 +26,11 @@ public class tblExcelRDV {
 		try {
 			workbook = new XSSFWorkbook(inputStream);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
         Sheet firstSheet = workbook.getSheetAt(0);
         String titresColTbl = ""; 
         Object[][] tbl_RDV = new Object[firstSheet.getLastRowNum()][17];
-        // String ligne;
         
         // On rï¿½cupï¿½re tout d'abord le titre des colonnes dans le tableau
         
@@ -61,13 +60,11 @@ public class tblExcelRDV {
         try {
 			workbook.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
         try {
 			inputStream.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
         

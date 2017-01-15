@@ -12,8 +12,12 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+// Toutes les fonctions dans cette classe fonctionnent de la même façon. On crée une connexion au fichier Excel, 
+// on crée les nouvelles cellules puis on les implémente dans le fichier Excel à la fin. De façon similaire, pour une 
+// base Oracle, on établit une connexion via une connexion pool (librairie JDBC)
+
 public class ModificationExcel {
-	// Impression d'un nouveau rendez-vous dans le tableau excel des RDV
+	// Impression d'un nouveau rendez-vous dans le tableau excel des RDV à partir d'un RdvDialogInfo
 	public static void nouveauRendezVous(RdvDialogInfo nouveauRDV) {
 		String excelFilePath = "RDV.xlsx";
         FileInputStream inputStream;
@@ -22,10 +26,8 @@ public class ModificationExcel {
 			inputStream = new FileInputStream(new File(excelFilePath));
 			workbook = new XSSFWorkbook(inputStream);
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -91,16 +93,15 @@ public class ModificationExcel {
 	        fileOut.close();
 	        workbook.close();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
-	// Mettre Ã  jour l'heure et la minute du rendez-vous ainsi que la couleur lors de la crÃ©ation du
-	// planning service
+	// Mettre à  jour l'heure et la minute du rendez-vous ainsi que la couleur lors de la création du
+	// planning service (la couleur n'est pas utilisée à l'heure actuelle mais pourrait être dans le futur pour
+	// un affichage puis coloré/visuel. A réfléchir.
 	public static void updateHeureRDV(RdvDialogInfo RDV, String nouvelleC) {
 		int idRDV = RDV.getID();
 		String excelFilePath = "RDV.xlsx";
@@ -110,10 +111,10 @@ public class ModificationExcel {
 			inputStream = new FileInputStream(new File(excelFilePath));
 			workbook = new XSSFWorkbook(inputStream);
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 		
@@ -137,15 +138,14 @@ public class ModificationExcel {
 	        fileOut.close();
 	        workbook.close();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
-	// Mettre Ã  jour le retard du rendez-vous lors de la crÃ©ation du planning pharmacie
+	// Mettre à  jour le retard du rendez-vous lors de la création du planning pharmacie. On appelle cette fonction 
+	// lors de la création du planning pharmacie puisque c'est à ce moment là qu'on va ajouter du retard aux RDVs
 	public static void updateRetardRDV(RdvDialogInfo RDV, int nouveauRetard) {
 		int idRDV = RDV.getID();
 		String excelFilePath = "RDV.xlsx";
@@ -155,10 +155,10 @@ public class ModificationExcel {
 			inputStream = new FileInputStream(new File(excelFilePath));
 			workbook = new XSSFWorkbook(inputStream);
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 		
@@ -179,15 +179,16 @@ public class ModificationExcel {
 	        fileOut.close();
 	        workbook.close();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 	}
 
-	// Supprimer un rendez-vous de la liste
+	// Supprimer un rendez-vous de la liste des RDVS: pour faire cela, on va supprimer complètement la ligne du RDV du fichier
+	// Excel.
 	public static void deleteRDV(int idRDV) {
 		String excelFilePath = "RDV.xlsx";
         FileInputStream inputStream;
@@ -196,10 +197,10 @@ public class ModificationExcel {
 			inputStream = new FileInputStream(new File(excelFilePath));
 			workbook = new XSSFWorkbook(inputStream);
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 		
@@ -227,15 +228,16 @@ public class ModificationExcel {
 			fileOut.flush();
 	        fileOut.close();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 	}
 	
-	// Modifier le nombre de lits et de fauteuils dans le fichier des services via la fenÃªtre de paramÃ¨tres
+	// Modifier le nombre de lits et de fauteuils dans le fichier des services via la fenêtre de paramètres. On va chercher
+	// la ligne contenant le service puis on met à jour les deux cases contenant les informations logistiques du service.
 	public static void modificationService(Service service, int nbLits, int nbFauteuils) {
 		
 		String excelFilePath = "Connexion.xlsx";
@@ -245,10 +247,10 @@ public class ModificationExcel {
 			inputStream = new FileInputStream(new File(excelFilePath));
 			workbook = new XSSFWorkbook(inputStream);
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 		
@@ -270,10 +272,10 @@ public class ModificationExcel {
 	        fileOut.close();
 	        workbook.close();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 	}

@@ -213,7 +213,7 @@ public class Pharmacie{
 				int minute = RDVPharma[k].getHoraires()[1];				
 				// on cherche la navette dont le départ est juste avant l'heure du RDV
 				int indiceNavette = 0;						// indice permettant de repérer la bonne navette
-				while (Navette[indiceNavette].getHoraires()[0]<heure){ 
+				while (Navette[indiceNavette].getHeureXminute()<(heure*60 + minute)){ 
 					indiceNavette++;
 				}
 				if (indiceNavette>0){
@@ -347,7 +347,8 @@ public class Pharmacie{
 					donnee[ligne][7]=RDVPharma[k].getDate().format(dateformat);
 					donnee[ligne][8]=Integer.toString(RDVPharma[k].getHoraires()[0]) + "h" + Integer.toString(RDVPharma[k].getHoraires()[1]);
 					ligne++;
-				}			
+				
+				}
 			}
 			
 			else{// sinon (la méthode est la mÃªme, mais il ne faut pas commencer les traitements avant 13h 							 
@@ -394,7 +395,8 @@ public class Pharmacie{
 				ligne++;
 			}
 		}
-			
+		
+		OrdonnancementPlanning.tempsAttenteParMobiliersUpdate(daten);
 		TModel PlanningPharma = new TModel(donnee,title);
 		return PlanningPharma;
 		

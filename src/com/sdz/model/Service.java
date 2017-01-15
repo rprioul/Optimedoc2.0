@@ -6,13 +6,14 @@ public class Service {
 	private int nbreFauteuils;
 
 
-
+	// Constructeur
 	public Service(String pNom){
 		this.nom=pNom;
 		this.nbreLits=RchDonnees.trouverNbLits(pNom);
 		this.nbreFauteuils=RchDonnees.trouverNbFauteuils(pNom);
 	}
 	
+	// getters et setters
 	public String getNomService(){
 		return nom;
 	}

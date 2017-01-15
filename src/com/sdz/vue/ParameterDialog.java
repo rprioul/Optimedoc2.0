@@ -68,7 +68,6 @@ public ParameterDialog(AbstractControler controler){
 				//Listener sur le bouton "modifier"
 		modifier.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				//System.out.println("Envoie au controler du lit:" + replit.getText());
 				controler.setMobiliers(replit.getText(), repfauteuil.getText());
 				dispose();
 			}
@@ -77,7 +76,6 @@ public ParameterDialog(AbstractControler controler){
 		//Listener sur le bouton "annuler"
 		annuler.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				//CODE A REMPLIR
 				dispose(); //window destroyed and cleaned
 			}
 		});

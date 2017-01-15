@@ -1,14 +1,14 @@
 package com.sdz.model;
 
 public class Traitement{
-	private Double durée;  //durÃ©e d'administration
-	private Double duréeDeVieTraitement;  //durÃ©e de vie basÃ©e sur les chimios 
+	private Double durée;  //durée d'administration
+	private Double duréeDeVieTraitement;  //durée de vie basée sur les chimios 
 	private String nom;
 	private Chimio chimio[];
 	
 	public Traitement(String pNom){
 		
-		// On va rechercher les composants du traitement dans le fichier Excel et on crÃ©Ã©e les Chimio nÃ©cessaires
+		// On va rechercher les composants du traitement dans le fichier Excel et on créée les Chimio nécessaires
 		Double[] listeChimio = RchDonnees.trouverComposants(pNom);
 		
 		Chimio[] chimiosComp = new Chimio[listeChimio.length];
@@ -21,9 +21,9 @@ public class Traitement{
 		this.durée= RchDonnees.trouverDuréeTrait(pNom);
 		this.chimio= chimiosComp;
 		Double min = 1000.0 ;
-		for(int i=0 ; i < chimiosComp.length ; i++){		//on obtient la durÃ©e de vie du traitement
-			if (chimiosComp[i].getDuréeDeVie() < min){ 		//en se basant sur la durÃ©e de vie des chimios
-				min = chimiosComp[i].getDuréeDeVie();		//On repÃ¨re la chimio avec la plus petite durÃ©e de vie
+		for(int i=0 ; i < chimiosComp.length ; i++){		//on obtient la durée de vie du traitement
+			if (chimiosComp[i].getDuréeDeVie() < min){ 		//en se basant sur la durée de vie des chimios
+				min = chimiosComp[i].getDuréeDeVie();		//On repère la chimio avec la plus petite durée de vie
 			}
 		this.duréeDeVieTraitement=min;
 		}

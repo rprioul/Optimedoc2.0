@@ -9,6 +9,9 @@ import org.apache.poi.ss.util.NumberToTextConverter;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class tblExcelConnexion {
+	// Cette classe permet d'importer les services et les informations relatives 
+	// qui sont stockés dans le fichier Excel dans un Object[][]
+	
     
     public static Object[][] importTblConnexions() {
     	
@@ -17,7 +20,6 @@ public class tblExcelConnexion {
 		try {
 			inputStream = new FileInputStream(new File(excelFilePath));
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
          
@@ -25,7 +27,6 @@ public class tblExcelConnexion {
 		try {
 			workbook = new XSSFWorkbook(inputStream);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -35,14 +36,14 @@ public class tblExcelConnexion {
         Object[][] tbl_Connexions = new Object[firstSheet.getLastRowNum()][4];
         // String ligne;
         
-        // On rï¿½cupï¿½re tout d'abord le titre des colonnes dans le tableau
+        // On récupère tout d'abord le titre des colonnes dans le tableau
         
         for(int i=0; i<2; i++) {
         	titresColTbl = titresColTbl + firstSheet.getRow(0).getCell(i).getStringCellValue() + " ";
         }
         
-        // On rï¿½cupï¿½re ensuite les valeurs contenues dans le tableau ï¿½ l'aide d'une double 
-        // boucle for. Possibilitï¿½ d'utiliser une double boucle while avec un iterator
+        // On récupère ensuite les valeurs contenues dans le tableau à l'aide d'une double 
+        // boucle for. Possibilité d'utiliser une double boucle while avec un iterator
         
         for(int j=0; j<4; j++) {
             for(int i=0; i<firstSheet.getLastRowNum(); i++) {
@@ -63,13 +64,11 @@ public class tblExcelConnexion {
         try {
 			workbook.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
         try {
 			inputStream.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
         

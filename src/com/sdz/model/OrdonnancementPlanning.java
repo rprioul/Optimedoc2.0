@@ -1,4 +1,10 @@
 package com.sdz.model;
+
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 ///// Contient l'ensemble des RDV
 
 
@@ -248,15 +254,13 @@ public class OrdonnancementPlanning{
 					//si le premier créneau disponible est 8h : on teste si il y a une chimiothérapie dans le traitement qui a 
 					//une durée de vie inférieur Ã  24h. Si c'est le cas, vu que le traitement ne sera pas préparé la veille, on 
 					// prend le créneau de 8h30 : heure d'arrivée de la première navette
-						for (int i = 0; i<rdv.getTraitement().getChimio().length ; i++){
-							if (rdv.getTraitement().getChimio()[i].getDuréeDeVie()<24){
-								donnee[0][repèreColonne]="";
-								donnee[1][repèreColonne]="";
-								ligneDebut+=2; 
-								break;
-							}
+					if (rdv.getTraitement().getDuréeDeVieTraitement()<24){
+						donnee[0][repèreColonne]="";
+						donnee[1][repèreColonne]="";
+						ligneDebut+=2; 
 						}
 					}
+					
 					if (ligneDebut!=ligneMatin-1){    // si on a trouvé un créneau disponible le matin 
 						rdv.setHoraires((int) donnee[ligneDebut][0], (int) donnee[ligneDebut][1]);
 						rdv.setLocalisationRDV(title[repèreColonne]);
@@ -370,7 +374,6 @@ public class OrdonnancementPlanning{
 		
 	
 	}
-	
 	//fonction qui permet de trier par heure croissante une liste de RDVs une fois qu'ils ont été placés dans un planning 
 	public static RdvDialogInfo[] trierHeureCroissante(RdvDialogInfo RDV[]) {
 		int longueur = RDV.length;
@@ -394,7 +397,69 @@ public class OrdonnancementPlanning{
 			} while (permut);
 		return RDV;
 	}
+
+	public static void tempsAttenteParMobiliersUpdate(DateFormat date){
+		Date dateformat = new Date();
+		//on récupère la liste des services en String
+		String[] listeService = RchDonnees.trouverUtilisateurs();
+		//k=0 représente la pharmacie, on ne veut pas
+		for (int k=1 ; k<listeService.length ; k++){
+			//on crée le service à partir du Service écrit en String
+			Service service = new Service(listeService[k]);
+			//on récupère tous les rdvs du service de cette date
+			RdvDialogInfo[] rdvDuService = RchDonnees.selectionListeRDV(service, date.format(dateformat));
+			//on crée une liste qui définira le mobilier du service. [Li1, Lit2, ..., Fauteuil1, Fauteuil2, ...]
+			String[] localisationDuRDV = new String[service.getNbreLits()+service.getNbreFauteuils()];
+			int j=1;
+			for (int i=0; i<service.getNbreLits(); i++){
+				String indice = ""+j;
+				localisationDuRDV[i]="Lit "+ indice;
+				j++;
+			}
+			j = 1;
+			for (int i=service.getNbreLits(); i<localisationDuRDV.length; i++){
+				String indice = ""+j;
+				localisationDuRDV[i]="Fauteuil "+ indice;
+				j++;
+			}
+			// pour un mobilier donné, on va créer une liste contenant tous les RDVs de ce mobilier
+			for (int i=0; i<localisationDuRDV.length;i++){
+				// on compte combien de RDV il y a dans un mobilier donné
+				int compteur = 0;
+				List<Integer> indiceRdvDuService = new ArrayList<Integer>();
+				for (int p=0; p<rdvDuService.length;p++){
+					if (rdvDuService[p].getLocalisationRDV().equals(localisationDuRDV[i])){
+						compteur++;
+						indiceRdvDuService.add(p);
+					}
+				}
+				RdvDialogInfo[] rdvDuMemeMobilier = new RdvDialogInfo[compteur];
+				for (int w=0; w<rdvDuMemeMobilier.length;w++){
+					rdvDuMemeMobilier[w]=rdvDuService[indiceRdvDuService.get(w)];
+				}
+				//on trie cette liste par horaire de rdv croissante
+				trierHeureCroissante(rdvDuMemeMobilier);
+				//on va dorénavant modifier le temps d'attente
+				for (int p=0 ; p<rdvDuMemeMobilier.length-1; p++){
+					int m=p+1;
+					int tempsAttente = rdvDuMemeMobilier[p].getTempsAttente();
+					//si le temps d'attente est égal à 0, on ne fait rien
+					if (tempsAttente!=0){
+						int ecart = rdvDuMemeMobilier[m].getHoraires()[0]*60+rdvDuMemeMobilier[m].getHoraires()[1]-
+								(rdvDuMemeMobilier[p].getHoraires()[0]*60+rdvDuMemeMobilier[p].getHoraires()[1]+rdvDuMemeMobilier[p].getTraitement().getDurée().intValue());
+						if (ecart<tempsAttente){
+							if (tempsAttente-ecart>rdvDuMemeMobilier[m].getTempsAttente()){
+								rdvDuMemeMobilier[m].setTempsAttente(tempsAttente-ecart);
+								ModificationExcel.updateRetardRDV(rdvDuMemeMobilier[m], (tempsAttente-ecart));
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 }
+
 
 
 

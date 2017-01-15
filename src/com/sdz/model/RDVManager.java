@@ -1,6 +1,9 @@
 package com.sdz.model;
 
 public class RDVManager {
+	//Cette classe agit comme une variable globale permettant d'accéder à la liste des rendez-vous d'un jour et d'un service	
+	// ce qui est utile pour l'affichage dans la fenêtre d'un des services.
+	
 	private static RdvDialogInfo[] currentRDV = null;
 	private static int tempsattente = 0;
 	

@@ -10,6 +10,8 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class tblExcelProtocoles {
+	// Cette classe permet d'importer les protocoles (traitements) et les informations relatives 
+	// qui sont stockés dans le fichier Excel dans un Object[][]
      
     public static Object[][] importTblProtocoles() {
         String excelFilePath = "Protocoles.xlsx";
@@ -17,7 +19,6 @@ public class tblExcelProtocoles {
 		try {
 			inputStream = new FileInputStream(new File(excelFilePath));
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
         
@@ -61,13 +62,11 @@ public class tblExcelProtocoles {
         try {
 			workbook.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
         try {
 			inputStream.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
         

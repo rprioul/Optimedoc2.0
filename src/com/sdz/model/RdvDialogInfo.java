@@ -11,10 +11,11 @@ public class RdvDialogInfo{
 	  private int tempsAttente, ID;  //temps en minute 
 	  private Traitement traitement;
 	  private int nombreTotalRdv=0;
-	  
+
 	  public RdvDialogInfo() {
 	  }
 	  
+	  // Constructeur
 	  public RdvDialogInfo(int ID, Service pService, DateFormat date, String demijournee, String nom, String prenom, String sexe, DateFormat dateDeNaissance, Traitement traitement, 
 			  boolean lit, boolean chimio, String couleur, boolean valide){
 		  this.ID = ID;
@@ -31,7 +32,6 @@ public class RdvDialogInfo{
 		  this.couleur=couleur;
 		  this.setValide(valide);
 		  
-		  // System.out.println("Infos lit : "+this.lit +"\n");
 	  }
 	  
 	  public String toString(){
@@ -123,12 +123,10 @@ public class RdvDialogInfo{
 	}
 
 	public String getCouleur() {
-		// TODO Auto-generated method stub
 		return couleur;
 	}
 	
 	public void setCouleur(String couleur) {
-		// TODO Auto-generated method stub
 		this.couleur = couleur;
 	}
 	
@@ -137,7 +135,6 @@ public class RdvDialogInfo{
 	}
 	
 	public void setLocalisationRDV(String localisationRDV) {
-		// TODO Auto-generated method stub
 		this.localisationRDV = localisationRDV;
 	}
 

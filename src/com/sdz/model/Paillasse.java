@@ -28,17 +28,21 @@ public class Paillasse {
 		}
 		this.horairePaillasse[2]=this.horairePaillasse[0]*60+this.horairePaillasse[1];
 	}
-	public void setCompteurPaillasse(){;
+	
+	// getters et setters
+	
+	public void setCompteurPaillasse(){
 		this.compteur+=1;
 	}
-	public  void setCompteurPaillasseInit(){;
+	
+	public  void setCompteurPaillasseInit(){
 		this.compteur=0;		
 	}
 	
-	//////
 	public  double[] getHorairePaillasse(){
 		return horairePaillasse;
-	}		
+	}	
+	
 	public  int getCompteur(){
 		return compteur;
 	}

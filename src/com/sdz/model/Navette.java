@@ -5,7 +5,7 @@ public class Navette {
 	private int[] horaires = new int[2]; //heure , minute
 	private int heureXminute;
 	
-	
+	// Constructeur
 	public Navette(String pNom, int pHeure , int pMinute){
 		this.nom = pNom;
 		this.horaires[0]=pHeure;
@@ -13,6 +13,7 @@ public class Navette {
 		this.heureXminute = pHeure*60 + pMinute;
 	}
 	
+	// getters
 	public String getNom(){
 		return nom;
 	}

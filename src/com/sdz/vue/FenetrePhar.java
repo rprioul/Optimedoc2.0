@@ -9,6 +9,7 @@ import java.awt.event.WindowListener;
 import java.awt.print.PrinterException;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 
 import javax.swing.ImageIcon;
@@ -21,15 +22,14 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 import com.sdz.controler.AbstractControler;
+import com.sdz.model.DateManager;
+import com.sdz.model.OrdonnancementPlanning;
 import com.sdz.model.Pharmacie;
 import com.sdz.model.RchDonnees;
 import com.sdz.model.RdvDialogInfo;
 import com.sdz.model.Service;
-import com.sdz.model.StringtoDateFormat;
 import com.sdz.model.TModel;
 import com.sdz.observer.Observer;
-import com.sdz.vue.Fenetre.MyWindowListener;
-import com.sdz.vue.Fenetre.PrintListener;
 
 
 
@@ -65,18 +65,14 @@ public class FenetrePhar extends JFrame implements Observer{
 	class MyWindowListener implements WindowListener {
 	    @Override
 		public void windowActivated(WindowEvent arg0) {
-			// TODO Auto-generated method stub
-			
 		}
 		@Override
-		public void windowClosed(WindowEvent arg0) {
-			// TODO Auto-generated method stub
-			
+		public void windowClosed(WindowEvent arg0) {	
 		}
 		@Override
 		public void windowClosing(WindowEvent arg0) {
-			JOptionPane jop = new JOptionPane();
-			int option = jop.showConfirmDialog(null, "Voulez-vous vraiment quitter?","Quitter",
+			new JOptionPane();
+			int option = JOptionPane.showConfirmDialog(null, "Voulez-vous vraiment quitter?","Quitter",
 					JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
 			if(option == JOptionPane.OK_OPTION){
 				System.exit(0);
@@ -89,23 +85,15 @@ public class FenetrePhar extends JFrame implements Observer{
 		}
 		@Override
 		public void windowDeactivated(WindowEvent arg0) {
-			// TODO Auto-generated method stub
-			
 		}
 		@Override
 		public void windowDeiconified(WindowEvent arg0) {
-			// TODO Auto-generated method stub
-			
 		}
 		@Override
 		public void windowIconified(WindowEvent arg0) {
-			// TODO Auto-generated method stub
-			
 		}
 		@Override
 		public void windowOpened(WindowEvent arg0) {
-			// TODO Auto-generated method stub
-			
 		}
 	}
 	
@@ -124,8 +112,8 @@ public class FenetrePhar extends JFrame implements Observer{
 		action.add(quitter);
 		quitter.addActionListener(new ActionListener(){
 			  public void actionPerformed(ActionEvent event){
-				  JOptionPane jop = new JOptionPane();
-					int option = jop.showConfirmDialog(null, "Voulez-vous vraiment quitter?","Quitter",
+				  new JOptionPane();
+					int option = JOptionPane.showConfirmDialog(null, "Voulez-vous vraiment quitter?","Quitter",
 							JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
 					if(option == JOptionPane.OK_OPTION){
 						System.exit(0);
@@ -137,23 +125,53 @@ public class FenetrePhar extends JFrame implements Observer{
 		
 		menuBar.add(action);
 		this.setJMenuBar(menuBar);
-		  RdvDialogInfo[][] journ = {RchDonnees.selectionListeRDV(new Service("Oncologie"), "09/01/2017"),
-				  RchDonnees.selectionListeRDV(new Service("Pneumologie"), "09/01/2017"),
-				  RchDonnees.selectionListeRDV(new Service("Dermatologie"), "09/01/2017"),
-				  RchDonnees.selectionListeRDV(new Service("Gynécologie"), "09/01/2017"),
-				  RchDonnees.selectionListeRDV(new Service("Rhumatologie"), "09/01/2017"),
-				  RchDonnees.selectionListeRDV(new Service("Neurologie"), "09/01/2017"),
-				  RchDonnees.selectionListeRDV(new Service("Cardiologie"), "09/01/2017"),};
-		  System.out.println("jour1 ok");
-		  RdvDialogInfo[][] jourN = {RchDonnees.selectionListeRDV(new Service("Oncologie"), "10/01/2017"),
-				  RchDonnees.selectionListeRDV(new Service("Pneumologie"), "10/01/2017"),
-				  RchDonnees.selectionListeRDV(new Service("Dermatologie"), "10/01/2017"),
-				  RchDonnees.selectionListeRDV(new Service("Gynécologie"), "10/01/2017"),
-				  RchDonnees.selectionListeRDV(new Service("Rhumatologie"), "10/01/2017"),
-				  RchDonnees.selectionListeRDV(new Service("Neurologie"), "10/01/2017"),
-				  RchDonnees.selectionListeRDV(new Service("Cardiologie"), "10/01/2017")};
-		  System.out.println("jour2 ok");
-		  update(Pharmacie.PlanningPharmacie(journ, jourN, StringtoDateFormat.StringToDateFormat("09/01/2017")),0);
+		String[] listeServices = Arrays.copyOfRange(RchDonnees.trouverUtilisateurs(), 1, RchDonnees.trouverUtilisateurs().length);
+		System.out.println(listeServices[0]);
+		OrdonnancementPlanning.creationPlanning(OrdonnancementPlanning.lancerOptimisation(RchDonnees.selectionListeRDV(
+				new Service("Oncologie"), DateManager.getCurrentDate())), new Service("Oncologie"));
+		OrdonnancementPlanning.creationPlanning(OrdonnancementPlanning.lancerOptimisation(RchDonnees.selectionListeRDV(
+				new Service("Pneumologie"), DateManager.getCurrentDate())), new Service("Pneumologie"));
+		OrdonnancementPlanning.creationPlanning(OrdonnancementPlanning.lancerOptimisation(RchDonnees.selectionListeRDV(
+				new Service("Dermatologie"), DateManager.getCurrentDate())), new Service("Dermatologie"));
+		OrdonnancementPlanning.creationPlanning(OrdonnancementPlanning.lancerOptimisation(RchDonnees.selectionListeRDV(
+				new Service("Gynécologie"), DateManager.getCurrentDate())), new Service("Gynécologie"));
+		OrdonnancementPlanning.creationPlanning(OrdonnancementPlanning.lancerOptimisation(RchDonnees.selectionListeRDV(
+				new Service("Rhumatologie"), DateManager.getCurrentDate())), new Service("Rhumatologie"));
+		OrdonnancementPlanning.creationPlanning(OrdonnancementPlanning.lancerOptimisation(RchDonnees.selectionListeRDV(
+				new Service("Neurologie"), DateManager.getCurrentDate())), new Service("Neurologie"));
+		OrdonnancementPlanning.creationPlanning(OrdonnancementPlanning.lancerOptimisation(RchDonnees.selectionListeRDV(
+				new Service("Cardiologie"), DateManager.getCurrentDate())), new Service("Cardiologie"));
+		
+		OrdonnancementPlanning.creationPlanning(OrdonnancementPlanning.lancerOptimisation(RchDonnees.selectionListeRDV(
+				new Service("Oncologie"), DateManager.getCurrentNextDate())), new Service("Oncologie"));
+		OrdonnancementPlanning.creationPlanning(OrdonnancementPlanning.lancerOptimisation(RchDonnees.selectionListeRDV(
+				new Service("Pneumologie"), DateManager.getCurrentNextDate())), new Service("Pneumologie"));
+		OrdonnancementPlanning.creationPlanning(OrdonnancementPlanning.lancerOptimisation(RchDonnees.selectionListeRDV(
+				new Service("Dermatologie"), DateManager.getCurrentNextDate())), new Service("Dermatologie"));
+		OrdonnancementPlanning.creationPlanning(OrdonnancementPlanning.lancerOptimisation(RchDonnees.selectionListeRDV(
+				new Service("Gynécologie"), DateManager.getCurrentNextDate())), new Service("Gynécologie"));
+		OrdonnancementPlanning.creationPlanning(OrdonnancementPlanning.lancerOptimisation(RchDonnees.selectionListeRDV(
+				new Service("Rhumatologie"), DateManager.getCurrentNextDate())), new Service("Rhumatologie"));
+		OrdonnancementPlanning.creationPlanning(OrdonnancementPlanning.lancerOptimisation(RchDonnees.selectionListeRDV(
+				new Service("Neurologie"), DateManager.getCurrentNextDate())), new Service("Neurologie"));
+		OrdonnancementPlanning.creationPlanning(OrdonnancementPlanning.lancerOptimisation(RchDonnees.selectionListeRDV(
+				new Service("Cardiologie"), DateManager.getCurrentNextDate())), new Service("Cardiologie"));
+		
+		  RdvDialogInfo[][] journ = {RchDonnees.selectionListeRDV(new Service("Oncologie"), DateManager.getCurrentDate()),
+				  RchDonnees.selectionListeRDV(new Service("Pneumologie"), DateManager.getCurrentDate()),
+				  RchDonnees.selectionListeRDV(new Service("Dermatologie"), DateManager.getCurrentDate()),
+				  RchDonnees.selectionListeRDV(new Service("Gynécologie"), DateManager.getCurrentDate()),
+				  RchDonnees.selectionListeRDV(new Service("Rhumatologie"), DateManager.getCurrentDate()),
+				  RchDonnees.selectionListeRDV(new Service("Neurologie"), DateManager.getCurrentDate()),
+				  RchDonnees.selectionListeRDV(new Service("Cardiologie"), DateManager.getCurrentDate()),};
+		  RdvDialogInfo[][] jourN = {RchDonnees.selectionListeRDV(new Service("Oncologie"), DateManager.getCurrentNextDate()),
+				  RchDonnees.selectionListeRDV(new Service("Pneumologie"), DateManager.getCurrentNextDate()),
+				  RchDonnees.selectionListeRDV(new Service("Dermatologie"), DateManager.getCurrentNextDate()),
+				  RchDonnees.selectionListeRDV(new Service("Gynécologie"), DateManager.getCurrentNextDate()),
+				  RchDonnees.selectionListeRDV(new Service("Rhumatologie"), DateManager.getCurrentNextDate()),
+				  RchDonnees.selectionListeRDV(new Service("Neurologie"), DateManager.getCurrentNextDate()),
+				  RchDonnees.selectionListeRDV(new Service("Cardiologie"), DateManager.getCurrentNextDate())};
+		  update(Pharmacie.PlanningPharmacie(journ, jourN, DateManager.getCurrentDateFormat()),0);
 	}
 	
 	class PrintListener implements ActionListener{

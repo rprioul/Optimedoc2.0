@@ -28,21 +28,23 @@ public abstract class AbstractControler {
     this.action = act;
     control();
   }
-  //Change le mobiliers
   
+  //Change le mobiliers
   public void setMobiliers (String lit, String fauteuil){
 		 this.action = "ChangeMobilier";	 
 		 this.lit = lit;
 		 this.fauteuil = fauteuil;
 		 control();
-	 }
+  }
   
+  //Lance l'optimisation
   public void setOpti (String style, String date){
 		 this.action = "Opti";	 
 		 this.styl = style;
 		 control();
-	 }
-  //Change le style du tableau
+  }
+  
+  //Change le style du tableau (de grille à liste ou vice versa)
   public void setStyle(String style, String date){
 	  this.styl = style ;
 	  this.date = date;
@@ -50,21 +52,22 @@ public abstract class AbstractControler {
 	  control();
   }
   
-//Réalise l'optimisation
-  public void setPlanning(/*Service service,*/ String date) {
-	  //this.service = service;
+  //Réalise l'optimisation
+  public void setPlanning(String date) {
 	  this.date = date;
 	  this.action = "CreaPlanning";
 	  control();
   }
   
+  //Supprime un rendez-vous
   public void SuppLigne(String action, String id){
 		 this.action = "Annul";
 		 this.id = id;
 		 control();
 		 
-	 }
+  }
   
+  //Changement de date par l'utilisateur
   public void setDate(String style, String date){
 	  this.date = date;
 	  this.styl = style;
@@ -72,7 +75,7 @@ public abstract class AbstractControler {
 	  control();
   }
   
-  //Définit le nombre
+  //Création d'un nouveau rendez-vous par l'utilisateur
   public void setNewRdv(Object[] donnee, String style, String date){
 	  this.donnees = donnee;
 	  this.action = "New"; 

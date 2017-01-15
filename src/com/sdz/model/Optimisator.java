@@ -16,6 +16,7 @@ public class Optimisator extends AbstractModel{
 	public void chgDate(String style, String date) {
 		RDVManager.setCurrentRDV(RchDonnees.selectionListeRDV(new Service(UserManager.getCurrentUser()), date));
 		RDVManager.setTempsattente(RDVManager.getCurrentRDV());
+		// On fait une divergence en if selon la sélection de l'affichage
 		if(style.equals("Liste")) {
 			TModel tmodel = RchDonnees.conversionTModel(OrdonnancementPlanning.trierHeureCroissante(RDVManager.getCurrentRDV()));
 			notifyObserver(tmodel, RDVManager.getTempsattente());
@@ -28,7 +29,7 @@ public class Optimisator extends AbstractModel{
 		
 	}
 	
-	//Définit l'opérateur
+	//L'utilisateur a changé d'affichage (entre par liste et par grille) donc on modifie le TModel à afficher.
 	public void chgtTable(String str){ 
 		  
 		  if (str == "Liste")
@@ -47,7 +48,8 @@ public class Optimisator extends AbstractModel{
 		  }
 	  }
 
-	  //Définit le nombre
+	  // Nouveau RDV saisi par l'user. On va à la fois l'ajouter au RDVManager pour l'affichage mais aussi l'inscrire dans 
+	  // le tableau Excel permettant de stocker les RDVs. 
 	  public void newRDV(Object[] donnee, String style, String date){
 		  RdvDialogInfo RDV = new RdvDialogInfo(RchDonnees.newIDRDV(), new Service(UserManager.getCurrentUser()),
 				  StringtoDateFormat.StringToDateFormat(donnee[0].toString()), donnee[1].toString(), donnee[2].toString(), 
@@ -56,6 +58,8 @@ public class Optimisator extends AbstractModel{
 				  "#EE4035", RchDonnees.ConvOuiTrue(donnee[9]));
 		  RDV.setLocalisationRDV("Non affecté");
 		  ModificationExcel.nouveauRendezVous(RDV);
+		  // Si le style est en liste on ajoute le nouveau rendez-vous à la liste. Si l'affichage est en grille, on ne l'affiche 
+		  // pas, puisqu'on ne sait pas encore ni à quelle heure ni à quel endroit le positionner.
 		  if(style.equals("Liste") && date.equals(donnee[0].toString())) {
 			  RDVManager.ajouterRDV(RDV);
 			  RDVManager.setTempsattente(RDVManager.getCurrentRDV());
@@ -64,6 +68,8 @@ public class Optimisator extends AbstractModel{
 		  }
 	  }
 	  
+	  // Lors de l'optimisation on va mettre à jour les rendez-vous dans l'excel puis les récupérer dans le fichier excel pour
+	  // repeupler le RDVManager. On actualise ensuite l'affichage en fonction de celui choisi par l'user
 	  public void opti(String style, String date) {
 		  if(style.equals("Grille")) {
 			  TModel tmodel = OrdonnancementPlanning.creationPlanning(OrdonnancementPlanning.lancerOptimisation(RDVManager.getCurrentRDV()),
@@ -83,15 +89,13 @@ public class Optimisator extends AbstractModel{
 		  
 	  }
 
-	  //Force le calcul
+	  // Dans le cas où la modification du rendez-vous serait implémenté: gain de temps de calcul en le faisant.
 	  public void modifRDV() {
 		  
 	  }
 
 	@Override
 	public void notifyObserver(TModel tableau) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	  
